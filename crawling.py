@@ -8,9 +8,9 @@ import os
 #     dir = 'C:/Users/shavi/Desktop/CodingResult/crawling/selenium/images/'
 #     urllib.request.urlretrieve(img_url, dir + img_name +'/'+ img_name + '.jpg')
 
-driver = webdriver.Chrome(r'C:/Users/shavi/Desktop/CodingResult/브랜드테스트이미지/crawling/selenium/chromedriver.exe')
+driver = webdriver.Chrome(r'#chromedriver위치')
 driver.get("https://www.google.co.kr/imghp?hl=ko&ogbl")
-search_list = ["발렌티노 지갑", "발렌티노 패딩"]
+search_list = ["#검색어목록"]
 for search_element in search_list:
     elem = driver.find_element_by_name("q")
     elem.clear()
@@ -41,7 +41,7 @@ for search_element in search_list:
             time.sleep(3)
             # image_url = driver.find_element_by_css_selector('.n3VNCb').get_attribute("src")
             image_url = driver.find_element_by_xpath('/html/body/div[2]/c-wiz/div[3]/div[2]/div[3]/div/div/div[3]/div[2]/c-wiz/div/div[1]/div[1]/div/div[2]/a/img').get_attribute('src')
-            image_dir = 'C:/Users/shavi/Desktop/CodingResult/crawling/selenium/images/'+search_element+'/'
+            image_dir = 'C:/Users/shavi/Desktop/CodingResult/crawling/selenium/images/'+search_element+'/' #저장위치
             if not os.path.exists(image_dir):
                 os.makedirs(image_dir)
             urllib.request.urlretrieve(image_url, image_dir + search_element+ str(i) +'.jpg')

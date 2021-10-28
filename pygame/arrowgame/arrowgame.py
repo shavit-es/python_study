@@ -21,16 +21,20 @@ clock = pygame.time.Clock()
 current_path = os.path.dirname(__file__)
 image_path = os.path.join(current_path, "images")
 
+#생성 함수
+def imageload(imagename):
+    return pygame.image.load(os.path.join(image_path, imagename))
+
 # 배경 만들기
-background = pygame.image.load(os.path.join(image_path, "background.png"))
+background = imageload("background.png")
 
 # 스테이지 만들기
-stage = pygame.image.load(os.path.join(image_path, "stage.png"))
+stage = imageload("stage.png")
 stage_size = stage.get_rect().size
 stage_height = stage_size[1]  # 스테이지 높이 위에 캐릭터를 두기 위해서
 
 # 캐릭터 만들기
-character = pygame.image.load(os.path.join(image_path, "character.png"))
+character = imageload("character.png")
 character_size = character.get_rect().size
 character_width = character_size[0]
 character_height = character_size[1]
@@ -44,7 +48,7 @@ character_to_x_LEFT = 0
 character_speed = 5
 
 # 무기 만들기
-weapon = pygame.image.load(os.path.join(image_path, "weapon.png"))
+weapon = imageload("weapon.png")
 weapon_size = weapon.get_rect().size
 weapon_width = weapon_size[0]
 
@@ -56,10 +60,10 @@ weapon_speed = 10
 
 # 공 만들기 (4개 크기에 대해 따로 처리)
 ball_images = [
-    pygame.image.load(os.path.join(image_path, "balloon1.png")),
-    pygame.image.load(os.path.join(image_path, "balloon2.png")),
-    pygame.image.load(os.path.join(image_path, "balloon3.png")),
-    pygame.image.load(os.path.join(image_path, "balloon4.png"))]
+    imageload("balloon1.png"),
+    imageload("balloon2.png"),
+    imageload("balloon3.png"),
+    imageload("balloon4.png")]
 
 # 공 크기에 따른 최초 스피드
 ball_speed_y = [-18, -15, -13, -11]
@@ -91,8 +95,26 @@ total_time = 30
 # 시간 계산
 start_ticks = pygame.time.get_ticks()  # 첫 시작 시간 정보를 받아옴
 
-# 이벤트 루프
+# 이벤트 루프 함수
+def appendballs(): # 공이 두 개로 나누어지는 함수
+    balls.append({
+    "pos_x": ball_pos_x + ball_width / 2 - small_ball_width/2,  # 공의 x좌표
+    "pos_y": ball_pos_y + ball_height / 2 - small_ball_height/2,  # 공의 y좌표
+    "img_idx": ball_img_idx + 1,  # 공의 이미지 인덱스
+    "to_x": -3,  # 공의 x축 이동 방향(3이면 왼쪽, -3이면 오른쪽)
+    "to_y": -6,
+    "init_spd_y": ball_speed_y[ball_img_idx+1]
+    })
+    balls.append({
+    "pos_x": ball_pos_x + ball_width / 2 - small_ball_width / 2,  # 공의 x좌표
+    "pos_y": ball_pos_y + ball_height / 2 - small_ball_height / 2,  # 공의 y좌표
+    "img_idx": ball_img_idx + 1,  # 공의 이미지 인덱스
+    "to_x": 3,  # 공의 x축 이동 방향(3이면 왼쪽, -3이면 오른쪽)
+    "to_y": -6,
+    "init_spd_y": ball_speed_y[ball_img_idx+1]
+    })
 
+# 이벤트 루프
 running = True
 while running:
     dt = clock.tick(60)  # 게임화면의 초당 프레임 수
@@ -204,23 +226,7 @@ while running:
                     small_ball_rect = ball_images[ball_img_idx + 1].get_rect()
                     small_ball_width = small_ball_rect.size[0]
                     small_ball_height = small_ball_rect.size[1]
-                    balls.append({
-                        "pos_x": ball_pos_x + ball_width / 2 - small_ball_width/2,  # 공의 x좌표
-                        "pos_y": ball_pos_y + ball_height / 2 - small_ball_height/2,  # 공의 y좌표
-                        "img_idx": ball_img_idx + 1,  # 공의 이미지 인덱스
-                        "to_x": -3,  # 공의 x축 이동 방향(3이면 왼쪽, -3이면 오른쪽
-                        "to_y": -6,
-                        "init_spd_y": ball_speed_y[ball_img_idx+1]
-                    })
-                    balls.append({
-                        "pos_x": ball_pos_x + ball_width / 2 - small_ball_width / 2,  # 공의 x좌표
-                        "pos_y": ball_pos_y + ball_height / 2 - small_ball_height / 2,  # 공의 y좌표
-                        "img_idx": ball_img_idx + 1,  # 공의 이미지 인덱스
-                        "to_x": 3,  # 공의 x축 이동 방향(3이면 왼쪽, -3이면 오른쪽
-                        "to_y": -6,
-                        "init_spd_y": ball_speed_y[ball_img_idx+1]
-                    })
-
+                    appendballs()
                 break
 
     #충돌된 공 or 무기 없애기
